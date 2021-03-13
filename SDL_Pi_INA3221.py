@@ -5,7 +5,7 @@
 # V 1.2
 
 
-#encoding: utf-8
+# encoding: utf-8
 
 from gpiozero import Button
 
@@ -13,120 +13,120 @@ import smbus
 
 # constants
 
-#/*=========================================================================
+# =========================================================================
 # I2C ADDRESS/BITS
 # -----------------------------------------------------------------------*/
-INA3221_ADDRESS = (0x40) # 1000000 (A0+A1=GND)
+INA3221_ADDRESS = (0x40)  # 1000000 (A0+A1=GND)
 INA3221_READ = (0x01)
-#/*=========================================================================*/
+# =========================================================================*/
 
-#/*=========================================================================
+# =========================================================================
 # CONFIG REGISTER (R/W)
 # -----------------------------------------------------------------------*/
 INA3221_REG_CONFIG = (0x00)
 # /*---------------------------------------------------------------------*/
-INA3221_CONFIG_RESET = (0x8000) # Reset Bit
+INA3221_CONFIG_RESET = (0x8000)  # Reset Bit
 
-INA3221_CONFIG_ENABLE_CHAN1 = (0x4000) # Enable Channel 1
-INA3221_CONFIG_ENABLE_CHAN2 = (0x2000) # Enable Channel 2
-INA3221_CONFIG_ENABLE_CHAN3 = (0x1000) # Enable Channel 3
+INA3221_CONFIG_ENABLE_CHAN1 = (0x4000)  # Enable Channel 1
+INA3221_CONFIG_ENABLE_CHAN2 = (0x2000)  # Enable Channel 2
+INA3221_CONFIG_ENABLE_CHAN3 = (0x1000)  # Enable Channel 3
 
-INA3221_CONFIG_AVG2 = (0x0800) # AVG Samples Bit 2 - See table 3 spec
-INA3221_CONFIG_AVG1 = (0x0400) # AVG Samples Bit 1 - See table 3 spec
-INA3221_CONFIG_AVG0 = (0x0200) # AVG Samples Bit 0 - See table 3 spec
+INA3221_CONFIG_AVG2 = (0x0800)  # AVG Samples Bit 2 - See table 3 spec
+INA3221_CONFIG_AVG1 = (0x0400)  # AVG Samples Bit 1 - See table 3 spec
+INA3221_CONFIG_AVG0 = (0x0200)  # AVG Samples Bit 0 - See table 3 spec
 
-INA3221_CONFIG_VBUS_CT2 = (0x0100) # VBUS bit 2 Conversion time - See table 4 spec
-INA3221_CONFIG_VBUS_CT1 = (0x0080) # VBUS bit 1 Conversion time - See table 4 spec
-INA3221_CONFIG_VBUS_CT0 = (0x0040) # VBUS bit 0 Conversion time - See table 4 spec
+INA3221_CONFIG_VBUS_CT2 = (0x0100)  # VBUS bit 2 Conversion time - See table 4 spec
+INA3221_CONFIG_VBUS_CT1 = (0x0080)  # VBUS bit 1 Conversion time - See table 4 spec
+INA3221_CONFIG_VBUS_CT0 = (0x0040)  # VBUS bit 0 Conversion time - See table 4 spec
 
-INA3221_CONFIG_VSH_CT2 = (0x0020) # Vshunt bit 2 Conversion time - See table 5 spec
-INA3221_CONFIG_VSH_CT1 = (0x0010) # Vshunt bit 1 Conversion time - See table 5 spec
-INA3221_CONFIG_VSH_CT0 = (0x0008) # Vshunt bit 0 Conversion time - See table 5 spec
+INA3221_CONFIG_VSH_CT2 = (0x0020)  # Vshunt bit 2 Conversion time - See table 5 spec
+INA3221_CONFIG_VSH_CT1 = (0x0010)  # Vshunt bit 1 Conversion time - See table 5 spec
+INA3221_CONFIG_VSH_CT0 = (0x0008)  # Vshunt bit 0 Conversion time - See table 5 spec
 
-INA3221_CONFIG_MODE_3 = (0x0004) # Operating Mode bit 2 - See table 6 spec
-INA3221_CONFIG_MODE_2 = (0x0002) # Operating Mode bit 1 - See table 6 spec
-INA3221_CONFIG_MODE_1 = (0x0001) # Operating Mode bit 0 - See table 6 spec
+INA3221_CONFIG_MODE_3 = (0x0004)  # Operating Mode bit 2 - See table 6 spec
+INA3221_CONFIG_MODE_2 = (0x0002)  # Operating Mode bit 1 - See table 6 spec
+INA3221_CONFIG_MODE_1 = (0x0001)  # Operating Mode bit 0 - See table 6 spec
 
-#/*=========================================================================*/
+# =========================================================================*/
 
-#/*=========================================================================
+# =========================================================================
 # SHUNT VOLTAGE REGISTER (R)
 # -----------------------------------------------------------------------*/
 INA3221_REG_SHUNTVOLTAGE_1 = (0x01)
-#/*=========================================================================*/
+# =========================================================================*/
 
-#/*=========================================================================
+# =========================================================================
 # BUS VOLTAGE REGISTER (R)
 # -----------------------------------------------------------------------*/
 INA3221_REG_BUSVOLTAGE_1 = (0x02)
-#/*=========================================================================*/
+# =========================================================================*/
 
-#/*=========================================================================
+# =========================================================================
 # CRITICAL ALERT LIMIT REGISTER (R/W)
 # -----------------------------------------------------------------------*/
 INA3221_REG_CRITALERTLIMIT_1 = (0x07)
-#/*=========================================================================*/
+# =========================================================================*/
 
-#/*=========================================================================
+# =========================================================================
 # WARNING ALERT LIMIT REGISTER (R/W)
 # -----------------------------------------------------------------------*/
 INA3221_REG_WARNINGALERTLIMIT_1 = (0x08)
-#/*=========================================================================*/
+# =========================================================================*/
 
-#/*=========================================================================
+# =========================================================================
 # SHUNT VOLTAGE SUM REGISTER (R)
 # -----------------------------------------------------------------------*/
 INA3221_REG_SHUNTVOLTAGESUM = (0x0D)
-#/*=========================================================================*/
+# =========================================================================*/
 
-#/*=========================================================================
+# =========================================================================
 # SHUNT VOLTAGE SUM REGISTER LIMIT (R/W)
 # -----------------------------------------------------------------------*/
 INA3221_REG_SHUNTVOLTAGESUMLIMIT = (0x0E)
-#/*=========================================================================*/
+# =========================================================================*/
 
-#/*=========================================================================
+# =========================================================================
 # MASK/ENABLE REGISTER (R/W)
 # -----------------------------------------------------------------------*/
 INA3221_REG_MASKENABLE = (0x0F)
-# /*---------------------------------------------------------------------*/
-#INA3221_REG_MASKENABLE_RESERVED = (0x8000) # Rserved
+# ---------------------------------------------------------------------*/
+INA3221_REG_MASKENABLE_RESERVED = (0x8000)  # Rserved
 
-INA3221_REG_MASKENABLE_SCC1 = (0x4000) # Summation Channel Control 1
-INA3221_REG_MASKENABLE_SCC2 = (0x2000) # Summation Channel Control 2
-INA3221_REG_MASKENABLE_SCC3 = (0x1000) # Summation Channel Control 3
+INA3221_REG_MASKENABLE_SCC1 = (0x4000)  # Summation Channel Control 1
+INA3221_REG_MASKENABLE_SCC2 = (0x2000)  # Summation Channel Control 2
+INA3221_REG_MASKENABLE_SCC3 = (0x1000)  # Summation Channel Control 3
 
-INA3221_REG_MASKENABLE_WEN = (0x0800) # Enable Warning Alert Latch
-INA3221_REG_MASKENABLE_CEN = (0x0400) # Enable Critical Alert Latch
+INA3221_REG_MASKENABLE_WEN = (0x0800)  # Enable Warning Alert Latch
+INA3221_REG_MASKENABLE_CEN = (0x0400)  # Enable Critical Alert Latch
 
-INA3221_REG_MASKENABLE_CF1 = (0x0200) # Critical-alert Flag Indicator 1
-INA3221_REG_MASKENABLE_CF2 = (0x0100) # Critical-alert Flag Indicator 2
-INA3221_REG_MASKENABLE_CF3 = (0x0080) # Critical-alert Flag Indicator 3
+INA3221_REG_MASKENABLE_CF1 = (0x0200)  # Critical-alert Flag Indicator 1
+INA3221_REG_MASKENABLE_CF2 = (0x0100)  # Critical-alert Flag Indicator 2
+INA3221_REG_MASKENABLE_CF3 = (0x0080)  # Critical-alert Flag Indicator 3
 
-INA3221_REG_MASKENABLE_SF = (0x0040) # Summation-alert Flag Indicator
+INA3221_REG_MASKENABLE_SF = (0x0040)  # Summation-alert Flag Indicator
 
-INA3221_REG_MASKENABLE_WF1 = (0x0020) # Warning-alert Flag Indicator 1
-INA3221_REG_MASKENABLE_WF2 = (0x0010) # Warning-alert Flag Indicator 2
-INA3221_REG_MASKENABLE_WF3 = (0x0008) # Warning-alert Flag Indicator 3
+INA3221_REG_MASKENABLE_WF1 = (0x0020)  # Warning-alert Flag Indicator 1
+INA3221_REG_MASKENABLE_WF2 = (0x0010)  # Warning-alert Flag Indicator 2
+INA3221_REG_MASKENABLE_WF3 = (0x0008)  # Warning-alert Flag Indicator 3
 
-INA3221_REG_MASKENABLE_PVF = (0x0004) # Power-valid-alert Flag Indicator
-INA3221_REG_MASKENABLE_TCF = (0x0002) # Timing-control-alert Flag Indicator
-INA3221_REG_MASKENABLE_CVRF = (0x0001) # Conversion-ready Flag
-#/*=========================================================================*/
+INA3221_REG_MASKENABLE_PVF = (0x0004)  # Power-valid-alert Flag Indicator
+INA3221_REG_MASKENABLE_TCF = (0x0002)  # Timing-control-alert Flag Indicator
+INA3221_REG_MASKENABLE_CVRF = (0x0001)  # Conversion-ready Flag
+# =========================================================================*/
 
-#/*=========================================================================
+# =========================================================================
 # POWER-VALID UPPER-LIMIT REGISTER (R/W)
 # -----------------------------------------------------------------------*/
 INA3221_REG_PVUPPER = (0x10)
-#/*=========================================================================*/
+# =========================================================================*/
 
-#/*=========================================================================
+# =========================================================================
 # POWER-VALID LOWER-LIMIT REGISTER (R/W)
 # -----------------------------------------------------------------------*/
 INA3221_REG_PVLOWER = (0x11)
-#/*=========================================================================*/
+# =========================================================================*/
 
-SHUNT_RESISTOR_VALUE = (0.1) # default shunt resistor value of 0.1 Ohm
+SHUNT_RESISTOR_VALUE = (0.1)  # default shunt resistor value of 0.1 Ohm
 
 INA3221_PIN_PV = 6
 INA3221_PIN_CRIT = 13
@@ -140,19 +140,19 @@ class SDL_Pi_INA3221():
     # INA3221 Code
     ###########################
     def __init__(
-            self,
-            twi=1,
-            addr=INA3221_ADDRESS,
-            shunt_resistor=SHUNT_RESISTOR_VALUE,
-            config=INA3221_CONFIG_ENABLE_CHAN1 |
-                INA3221_CONFIG_ENABLE_CHAN2 |
-                INA3221_CONFIG_ENABLE_CHAN3 |
-                INA3221_CONFIG_AVG1 |
-                INA3221_CONFIG_VBUS_CT2 |
-                INA3221_CONFIG_VSH_CT2 |
-                INA3221_CONFIG_MODE_3 |
-                INA3221_CONFIG_MODE_2 |
-                INA3221_CONFIG_MODE_1,
+        self,
+        twi=1,
+        addr=INA3221_ADDRESS,
+        shunt_resistor=SHUNT_RESISTOR_VALUE,
+        config=INA3221_CONFIG_ENABLE_CHAN1
+            | INA3221_CONFIG_ENABLE_CHAN2
+            | INA3221_CONFIG_ENABLE_CHAN3
+            | INA3221_CONFIG_AVG1
+            | INA3221_CONFIG_VBUS_CT2
+            | INA3221_CONFIG_VSH_CT2
+            | INA3221_CONFIG_MODE_3
+            | INA3221_CONFIG_MODE_2
+            | INA3221_CONFIG_MODE_1
     ):
         self._bus = smbus.SMBus(twi)
         self._addr = addr
@@ -164,52 +164,42 @@ class SDL_Pi_INA3221():
 
         self._write_register_little_endian(INA3221_REG_CONFIG, config)
 
-
     def _write(self, register, data):
-        # print("addr =0x%x register = 0x%x data = 0x%x " % (self._addr, register, data))
         self._bus.write_byte_data(self._addr, register, data)
-
 
     def _read(self, data):
         returndata = self._bus.read_byte_data(self._addr, data)
-        # print("addr = 0x%x data = 0x%x %i returndata = 0x%x " % (self._addr, data, data, returndata))
         return returndata
-
 
     def _read_register_little_endian(self, register):
 
         result = self._bus.read_word_data(self._addr, register) & 0xFFFF
-        lowbyte = (result & 0xFF00)>>8
+        lowbyte = (result & 0xFF00) >> 8
         highbyte = (result & 0x00FF) << 8
         switchresult = lowbyte + highbyte
-        # print("Read 16 bit Word addr =0x%x register = 0x%x switchresult = 0x%x " % (self._addr, register, switchresult))
         return switchresult
-
 
     def _write_register_little_endian(self, register, data):
 
         data = data & 0xFFFF
         # reverse configure byte for little endian
-        lowbyte = data>>8
-        highbyte = (data & 0x00FF)<<8
+        lowbyte = data >> 8
+        highbyte = (data & 0x00FF) << 8
         switchdata = lowbyte + highbyte
         self._bus.write_word_data(self._addr, register, switchdata)
-        # print("Write  16 bit Word addr =0x%x register = 0x%x data = 0x%x " % (self._addr, register, data))
-
-
 
     def _get_bus_voltage_raw(self, channel):
-	#Gets the raw bus voltage (16-bit signed integer, so +-32767)
+        # Gets the raw bus voltage (16-bit signed integer, so +-32767)
 
-        value = self._read_register_little_endian(INA3221_REG_BUSVOLTAGE_1+(channel -1) *2)
+        value = self._read_register_little_endian(INA3221_REG_BUSVOLTAGE_1 + (channel - 1) * 2)
         if value > 32767:
             value -= 65536
         return value
 
     def _get_shunt_voltage_raw(self, channel):
-	#Gets the raw shunt voltage (16-bit signed integer, so +-32767)
+        # Gets the raw shunt voltage (16-bit signed integer, so +-32767)
 
-        value = self._read_register_little_endian(INA3221_REG_SHUNTVOLTAGE_1+(channel -1) *2)
+        value = self._read_register_little_endian(INA3221_REG_SHUNTVOLTAGE_1 + (channel - 1) * 2)
         if value > 32767:
             value -= 65536
         return value
@@ -255,18 +245,18 @@ class SDL_Pi_INA3221():
         enablechannel1 = (self._config & INA3221_CONFIG_ENABLE_CHAN1) >> 14
         enablechannel2 = (self._config & INA3221_CONFIG_ENABLE_CHAN2) >> 13
         enablechannel3 = (self._config & INA3221_CONFIG_ENABLE_CHAN3) >> 12
-        averagingmode = (
-            self._config & (INA3221_CONFIG_AVG2 | INA3221_CONFIG_AVG1 | INA3221_CONFIG_AVG0)
-        ) >> 9
-        busvoltagecvrtime = (
-            self._config & (INA3221_CONFIG_VBUS_CT2 | INA3221_CONFIG_VBUS_CT1 | INA3221_CONFIG_VBUS_CT0)
-        ) >> 6
+        averagingmode = (self._config & (
+            INA3221_CONFIG_AVG2 | INA3221_CONFIG_AVG1 | INA3221_CONFIG_AVG0
+        )) >> 9
+        busvoltagecvrtime = (self._config & (
+            INA3221_CONFIG_VBUS_CT2 | INA3221_CONFIG_VBUS_CT1 | INA3221_CONFIG_VBUS_CT0
+        )) >> 6
         shuntvoltagecvrtime = (self._config & (
             INA3221_CONFIG_VSH_CT2 | INA3221_CONFIG_VSH_CT1 | INA3221_CONFIG_VSH_CT0
         )) >> 3
-        mode = (
-            self._config & (INA3221_CONFIG_MODE_3 | INA3221_CONFIG_MODE_2 | INA3221_CONFIG_MODE_1)
-        ) >> 0
+        mode = (self._config & (
+            INA3221_CONFIG_MODE_3 | INA3221_CONFIG_MODE_2 | INA3221_CONFIG_MODE_1
+        )) >> 0
 
         print("Config Register {0:<3} {1:<3} {2:<3} {3:<3} {4:<8} {5:<13} {6:<13} {7}".format(
             'RST', 'CH1', 'CH2', 'CH3', 'AVERAGES', 'VBUSCT', 'VSHCT', 'MODE',
@@ -292,30 +282,27 @@ class SDL_Pi_INA3221():
 
         print("Alert Levels (mV) {0:>8} {1:>8} {2:>8} {3:>8} {4:>8} {5:>8}".format(
             'WarnCh1', 'CritCh1', 'WarnCh2', 'CritCh2', 'WarnCh3', 'CritCh3'
-            ))
+        ))
         print("                  {0:8.2f} {1:8.2f} {2:8.2f} {3:8.2f} {4:8.2f} {5:8.2f}".format(
             warnalertch1, critalertch1, warnalertch2, critalertch2, warnalertch3, critalertch3
-            ))
-
+        ))
 
     def get_bus_voltage_v(self, channel):
-	# Gets the Bus voltage in volts
+        # Gets the Bus voltage in volts
         value = self._get_bus_voltage_raw(channel)
         # Same as float(value >> 3) * 0.008
         return value * 0.001
 
-
     def get_shunt_voltage_mv(self, channel):
-	# Gets the shunt voltage in mV (so +-168.3mV)
+        # Gets the shunt voltage in mV (so +-168.3mV)
         value = self._get_shunt_voltage_raw(channel)
         # Same as float(value >> 3) * 1000 * 0.00004
         return value * 0.005
 
-
     def get_current_ma(self, channel):
-        #Gets the current value in mA, taking into account the config settings and current LSB
-        value = self.get_shunt_voltage_mv(channel)/ SHUNT_RESISTOR_VALUE
-        return value;
+        # Gets the current value in mA, taking into account the config settings and current LSB
+        value = self.get_shunt_voltage_mv(channel) / SHUNT_RESISTOR_VALUE
+        return value
 
     def set_crit_alert_mv(self, channel, value):
         register = INA3221_REG_CRITALERTLIMIT_1 + (channel - 1) * 2
@@ -337,7 +324,8 @@ class SDL_Pi_INA3221():
 
     def get_warn_alert_mv(self, channel):
         # Gets the warn alert status
-        value = self._read_register_little_endian(INA3221_REG_WARNINGALERTLIMIT_1 + (channel - 1) * 2)
+        value = self._read_register_little_endian(
+            INA3221_REG_WARNINGALERTLIMIT_1 + (channel - 1) * 2)
         # Same as float(value >> 3) * 1000 * 0.00004
         return value * 0.005
 
@@ -399,4 +387,3 @@ class SDL_Pi_INA3221():
 
     def get_tc_pin(self):
         return self._tc.is_pressed
-
