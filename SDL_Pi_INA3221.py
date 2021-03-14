@@ -201,6 +201,17 @@ class SDL_Pi_INA3221():
     def reset(self):
         self._write_register_little_endian(INA3221_REG_CONFIG, INA3221_CONFIG_RESET)
 
+    def powerdown(self):
+        self.set_config(INA3221_CONFIG_MODE_3)
+
+    def get_config(self):
+        value = self._read_register_little_endian(INA3221_REG_CONFIG)
+        return value
+
+    def set_config(self, value):
+        self._write_register_little_endian(INA3221_REG_CONFIG, value)
+        self._config = value
+
     def print_config(self):
         averagingmodes = [
             '000-1',
@@ -377,5 +388,24 @@ class SDL_Pi_INA3221():
     def get_warn_pin(self):
         return self._warn.is_pressed
 
-    def get_tc_pin(self):
-        return self._tc.is_pressed
+    def get_pv_flag(self):
+        return self.get_mask_enable() & INA3221_REG_MASKENABLE_PVF
+
+    def get_tc_flag(self):
+        return self.get_mask_enable() & INA3221_REG_MASKENABLE_TCF
+
+    def get_crit_flag(self, channel):
+        flags = {
+            1: INA3221_REG_MASKENABLE_CF1,
+            2: INA3221_REG_MASKENABLE_CF2,
+            3: INA3221_REG_MASKENABLE_CF3,
+        }
+        return self.get_mask_enable() & flags[channel]
+
+    def get_warn_flag(self, channel):
+        flags = {
+            1: INA3221_REG_MASKENABLE_WF1,
+            2: INA3221_REG_MASKENABLE_WF2,
+            3: INA3221_REG_MASKENABLE_WF3,
+        }
+        return self.get_mask_enable() & flags[channel]
