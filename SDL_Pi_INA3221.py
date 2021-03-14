@@ -144,25 +144,20 @@ class SDL_Pi_INA3221():
         twi=1,
         addr=INA3221_ADDRESS,
         shunt_resistor=SHUNT_RESISTOR_VALUE,
-        config=INA3221_CONFIG_ENABLE_CHAN1
-            | INA3221_CONFIG_ENABLE_CHAN2
-            | INA3221_CONFIG_ENABLE_CHAN3
-            | INA3221_CONFIG_AVG1
-            | INA3221_CONFIG_VBUS_CT2
-            | INA3221_CONFIG_VSH_CT2
-            | INA3221_CONFIG_MODE_3
-            | INA3221_CONFIG_MODE_2
-            | INA3221_CONFIG_MODE_1
+        config=None
     ):
         self._bus = smbus.SMBus(twi)
         self._addr = addr
-        self._config = config
         self._pv = Button(INA3221_PIN_PV)
         self._crit = Button(INA3221_PIN_CRIT)
         self._warn = Button(INA3221_PIN_WARN)
         self._tc = Button(INA3221_PIN_TC)
 
-        self._write_register_little_endian(INA3221_REG_CONFIG, config)
+        if config is None:
+            self._config = self.get_config()
+        else:
+            self._write_register_little_endian(INA3221_REG_CONFIG, config)
+            self._config = config
 
     def _write(self, register, data):
         self._bus.write_byte_data(self._addr, register, data)
@@ -180,7 +175,6 @@ class SDL_Pi_INA3221():
         return switchresult
 
     def _write_register_little_endian(self, register, data):
-
         data = data & 0xFFFF
         # reverse configure byte for little endian
         lowbyte = data >> 8
@@ -190,7 +184,6 @@ class SDL_Pi_INA3221():
 
     def _get_bus_voltage_raw(self, channel):
         # Gets the raw bus voltage (16-bit signed integer, so +-32767)
-
         value = self._read_register_little_endian(INA3221_REG_BUSVOLTAGE_1 + (channel - 1) * 2)
         if value > 32767:
             value -= 65536
@@ -198,7 +191,6 @@ class SDL_Pi_INA3221():
 
     def _get_shunt_voltage_raw(self, channel):
         # Gets the raw shunt voltage (16-bit signed integer, so +-32767)
-
         value = self._read_register_little_endian(INA3221_REG_SHUNTVOLTAGE_1 + (channel - 1) * 2)
         if value > 32767:
             value -= 65536
