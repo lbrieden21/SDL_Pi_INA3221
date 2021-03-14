@@ -156,8 +156,7 @@ class SDL_Pi_INA3221():
         if config is None:
             self._config = self.get_config()
         else:
-            self._write_register_little_endian(INA3221_REG_CONFIG, config)
-            self._config = config
+            self.set_config(config)
 
     def _write(self, register, data):
         self._bus.write_byte_data(self._addr, register, data)
