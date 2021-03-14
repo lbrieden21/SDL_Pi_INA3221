@@ -380,7 +380,12 @@ class SDL_Pi_INA3221():
         return value
 
     def get_pv_pin(self):
-        return self._pv.is_pressed
+        # this pin seems to be inverted
+        return not self._pv.is_pressed
+
+    def get_tc_pin(self):
+        # this pin seems to be inverted
+        return not self._tc.is_pressed
 
     def get_crit_pin(self):
         return self._crit.is_pressed
