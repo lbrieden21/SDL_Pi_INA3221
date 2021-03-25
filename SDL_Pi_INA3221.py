@@ -336,19 +336,20 @@ class SDL_Pi_INA3221():
         value = self._read_register_little_endian(INA3221_REG_SHUNTVOLTAGESUM)
         if value > 32767:
             value -= 65536
-        # Same as float(value >> 3) * 1000 * 0.00004
-        return value * 0.005
+        # Same as float(value >> 1) * 1000 * 0.00004
+        return value * 0.02
 
-    def set_shunt_voltage_sum_limit(self, value):
-        value = int(value / 0.00004) << 1
+    def set_shunt_voltage_sum_limit_mv(self, value):
+        value = int(value / 0.04) << 1
         self._write_register_little_endian(INA3221_REG_SHUNTVOLTAGESUMLIMIT, value)
 
-    def get_shunt_voltage_sum_limit(self):
+    def get_shunt_voltage_sum_limit_mv(self):
         # Gets the shunt voltage sum limit
         value = self._read_register_little_endian(INA3221_REG_SHUNTVOLTAGESUMLIMIT)
         if value > 32767:
             value -= 65536
-        return value * 0.005
+        # Same as float(value >> 1) * 1000 * 0.00004
+        return value * 0.02
 
     def set_power_on_valid_lower(self, value):
         value = int(value / .008) << 3
