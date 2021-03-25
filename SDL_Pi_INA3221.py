@@ -380,37 +380,63 @@ class SDL_Pi_INA3221():
         return value
 
     def get_pv_pin(self):
-        # this pin seems to be inverted
-        return not self._pv.is_pressed
+        # Gets the state of the power valid pin
+        return 1 if self._pv.is_pressed else 0
 
     def get_tc_pin(self):
-        # this pin seems to be inverted
-        return not self._tc.is_pressed
+        # Gets the state of the timing control pin
+        return 0 if self._tc.is_pressed else 1
 
     def get_crit_pin(self):
-        return self._crit.is_pressed
+        # Gets the state of the critical pin
+        return 0 if self._crit.is_pressed else 1
 
     def get_warn_pin(self):
-        return self._warn.is_pressed
+        # Gets the state of the warning pin
+        return 0 if self._warn.is_pressed else 1
 
-    def get_pv_flag(self):
-        return self.get_mask_enable() & INA3221_REG_MASKENABLE_PVF
+    def get_sf_flag(self, mask=None):
+        if not mask:
+            mask = self.get_mask_enable()
+        flag = mask & INA3221_REG_MASKENABLE_SF
+        return 1 if int(flag) > 0 else 0
 
-    def get_tc_flag(self):
-        return self.get_mask_enable() & INA3221_REG_MASKENABLE_TCF
+    def get_pv_flag(self, mask=None):
+        if not mask:
+            mask = self.get_mask_enable()
+        flag = mask & INA3221_REG_MASKENABLE_PVF
+        return 1 if int(flag) > 0 else 0
 
-    def get_crit_flag(self, channel):
+    def get_tc_flag(self, mask=None):
+        if not mask:
+            mask = self.get_mask_enable()
+        flag = mask & INA3221_REG_MASKENABLE_TCF
+        return 1 if int(flag) > 0 else 0
+
+    def get_cvrf_flag(self, mask=None):
+        if not mask:
+            mask = self.get_mask_enable()
+        flag = mask & INA3221_REG_MASKENABLE_CVRF
+        return 1 if int(flag) > 0 else 0
+
+    def get_crit_flag(self, channel, mask=None):
         flags = {
             1: INA3221_REG_MASKENABLE_CF1,
             2: INA3221_REG_MASKENABLE_CF2,
             3: INA3221_REG_MASKENABLE_CF3,
         }
-        return self.get_mask_enable() & flags[channel]
+        if not mask:
+            mask = self.get_mask_enable()
+        flag = mask & flags[channel]
+        return 1 if int(flag) > 0 else 0
 
-    def get_warn_flag(self, channel):
+    def get_warn_flag(self, channel, mask=None):
         flags = {
             1: INA3221_REG_MASKENABLE_WF1,
             2: INA3221_REG_MASKENABLE_WF2,
             3: INA3221_REG_MASKENABLE_WF3,
         }
-        return self.get_mask_enable() & flags[channel]
+        if not mask:
+            mask = self.get_mask_enable()
+        flag = mask & flags[channel]
+        return 1 if int(flag) > 0 else 0
